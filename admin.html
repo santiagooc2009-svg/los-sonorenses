@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Panel de reseñas · Los Sonorenses Parrilla</title>
+  <meta name="theme-color" content="#141210">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body class="panel">
+  <header class="barra">
+    <div>
+      <span class="marca-sub">Panel del local</span>
+      <h1 class="marca-nombre marca-chica">Los Sonorenses</h1>
+    </div>
+    <button id="salir" class="boton-sec" hidden>Cerrar sesión</button>
+  </header>
+
+  <p id="aviso-demo" class="aviso-demo" hidden>
+    <strong>Modo demostración:</strong> las reseñas se guardan solo en este navegador.
+    Configura Supabase en <code>js/config.js</code> para usarlo de verdad (ver README).
+  </p>
+
+  <section id="vista-login" class="tarjeta" hidden>
+    <h2 class="titulo">Iniciar sesión</h2>
+    <form id="form-login">
+      <label class="campo"><span>Correo</span><input type="email" name="email" required autocomplete="username"></label>
+      <label class="campo"><span>Contraseña</span><input type="password" name="password" required autocomplete="current-password"></label>
+      <p id="error-login" class="error" role="alert" hidden></p>
+      <button class="boton" type="submit">Entrar</button>
+    </form>
+  </section>
+
+  <main id="vista-panel" hidden>
+    <section class="tiles">
+      <div class="tile"><span class="tile-num" id="t-promedio">–</span><span class="tile-txt">Promedio</span></div>
+      <div class="tile"><span class="tile-num" id="t-total">0</span><span class="tile-txt">Reseñas</span></div>
+      <div class="tile tile-alerta"><span class="tile-num" id="t-pendientes">0</span><span class="tile-txt">Quejas pendientes</span></div>
+      <div class="tile"><span class="tile-num" id="t-google">0</span><span class="tile-txt">Enviadas a Google</span></div>
+    </section>
+
+    <section class="controles">
+      <div class="filtros" role="group" aria-label="Filtrar reseñas">
+        <button class="filtro" data-filtro="pendientes" aria-pressed="true">Quejas pendientes</button>
+        <button class="filtro" data-filtro="quejas" aria-pressed="false">Todas las quejas</button>
+        <button class="filtro" data-filtro="positivas" aria-pressed="false">Positivas</button>
+        <button class="filtro" data-filtro="todas" aria-pressed="false">Todas</button>
+      </div>
+      <div class="filtros-extra">
+        <select id="periodo" aria-label="Periodo">
+          <option value="7">Últimos 7 días</option>
+          <option value="30" selected>Últimos 30 días</option>
+          <option value="90">Últimos 90 días</option>
+          <option value="0">Todo</option>
+        </select>
+        <input id="buscar" type="search" placeholder="Buscar (mesero, comentario…)" aria-label="Buscar">
+        <button id="exportar" class="boton-sec">Descargar CSV</button>
+        <button id="ver-qr" class="boton-sec">QR para mesas</button>
+      </div>
+    </section>
+
+    <section id="resumen-problemas" class="resumen" hidden>
+      <h2 class="subtitulo">¿Qué es lo que más falla? <span class="texto-suave" id="periodo-texto"></span></h2>
+      <ul id="barras" class="barras"></ul>
+    </section>
+
+    <p id="error-panel" class="error" role="alert" hidden></p>
+    <p id="vacio" class="texto-suave vacio" hidden>No hay reseñas con este filtro.</p>
+    <ul id="lista" class="lista"></ul>
+  </main>
+
+  <dialog id="dialogo-qr" class="dialogo">
+    <div class="qr-hoja">
+      <p class="marca-sub">Los Sonorenses Parrilla</p>
+      <h2 class="titulo">¿Cómo estuvo tu visita?</h2>
+      <div id="qr"></div>
+      <p>Escanea y califícanos</p>
+      <p class="texto-suave qr-url" id="qr-url"></p>
+    </div>
+    <div class="dialogo-acciones">
+      <button class="boton" id="imprimir-qr">Imprimir</button>
+      <button class="boton-sec" id="cerrar-qr">Cerrar</button>
+    </div>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.0/dist/umd/supabase.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

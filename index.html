@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Califica tu visita · Los Sonorenses Parrilla</title>
+  <meta name="description" content="Cuéntanos cómo estuvo tu visita a Los Sonorenses Parrilla.">
+  <meta name="theme-color" content="#141210">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <main class="tarjeta">
+    <header class="marca">
+      <span class="marca-sub">Parrilla sonorense</span>
+      <h1 class="marca-nombre">Los Sonorenses</h1>
+    </header>
+
+    <section id="paso-formulario">
+      <h2 class="titulo">¿Cómo estuvo tu visita?</h2>
+      <p class="texto-suave">Toca las estrellas para calificarnos.</p>
+
+      <form id="formulario" novalidate>
+        <fieldset class="estrellas" aria-label="Calificación">
+          <legend class="oculto">Calificación de 1 a 5 estrellas</legend>
+          <input type="radio" name="calificacion" id="e5" value="5"><label for="e5" title="5 estrellas">★</label>
+          <input type="radio" name="calificacion" id="e4" value="4"><label for="e4" title="4 estrellas">★</label>
+          <input type="radio" name="calificacion" id="e3" value="3"><label for="e3" title="3 estrellas">★</label>
+          <input type="radio" name="calificacion" id="e2" value="2"><label for="e2" title="2 estrellas">★</label>
+          <input type="radio" name="calificacion" id="e1" value="1"><label for="e1" title="1 estrella">★</label>
+        </fieldset>
+        <p id="etiqueta-estrellas" class="etiqueta-estrellas" aria-live="polite">&nbsp;</p>
+
+        <div id="detalles" hidden>
+          <div id="bloque-problemas" hidden>
+            <p class="pregunta">Lamentamos que no haya sido perfecta. ¿Qué falló?</p>
+            <div id="categorias" class="chips"></div>
+          </div>
+
+          <label class="campo">
+            <span id="texto-comentario">Tu comentario</span>
+            <textarea name="comentario" rows="4" maxlength="2000"></textarea>
+          </label>
+
+          <label class="campo">
+            <span>¿Quién te atendió? <em>(opcional)</em></span>
+            <input name="mesero" maxlength="100" autocomplete="off">
+          </label>
+
+          <label class="campo">
+            <span>Tu nombre <em>(opcional)</em></span>
+            <input name="nombre" maxlength="100" autocomplete="name">
+          </label>
+
+          <label class="campo" id="campo-contacto" hidden>
+            <span>Teléfono o WhatsApp para contactarte <em>(opcional)</em></span>
+            <input name="contacto" maxlength="100" inputmode="tel" autocomplete="tel">
+          </label>
+
+          <!-- Campo trampa contra bots: las personas no lo ven. -->
+          <label class="trampa" aria-hidden="true">Sitio web <input name="sitio" tabindex="-1" autocomplete="off"></label>
+
+          <p id="aviso-google" class="aviso" hidden>
+            Al enviar te llevaremos a Google para que compartas tu reseña.
+            Copiaremos tu comentario para que solo lo pegues.
+          </p>
+
+          <p id="error" class="error" role="alert" hidden></p>
+          <button type="submit" class="boton" id="enviar">Enviar</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="paso-positivo" class="final" hidden>
+      <p class="emoji" aria-hidden="true">🔥</p>
+      <h2 class="titulo">¡Gracias por venir!</h2>
+      <p>¿Nos ayudas compartiendo tu opinión en Google? Le ayuda mucho a la parrilla.</p>
+      <p id="aviso-copiado" class="texto-suave" hidden>Ya copiamos tu comentario: en Google solo mantén presionado y elige <strong>Pegar</strong>.</p>
+      <a id="boton-google" class="boton boton-google" href="#" rel="noopener">Publicar en Google</a>
+      <p id="cuenta-regresiva" class="texto-suave" aria-live="polite"></p>
+    </section>
+
+    <section id="paso-negativo" class="final" hidden>
+      <h2 class="titulo">Gracias por decírnoslo</h2>
+      <p>Tu comentario ya le llegó al gerente. Queremos que tu próxima visita sea mucho mejor.</p>
+      <p id="aviso-contacto" class="texto-suave" hidden>Te contactaremos pronto.</p>
+      <p id="google-opcional" class="texto-suave" hidden>
+        Si lo deseas, también puedes <a id="enlace-google-opcional" href="#" rel="noopener">dejar tu reseña en Google</a>.
+      </p>
+    </section>
+  </main>
+
+  <footer class="pie" id="pie"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.0/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/resena.js"></script>
+</body>
+</html>
