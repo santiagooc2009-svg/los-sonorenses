@@ -15,71 +15,89 @@
       <h1 class="marca-nombre">Los Sonorenses</h1>
     </header>
 
-    <section id="paso-formulario">
+    <!-- Paso 1: solo estrellas -->
+    <section id="paso-estrellas">
       <h2 class="titulo">¿Cómo estuvo tu visita?</h2>
-      <p class="texto-suave">Toca las estrellas para calificarnos.</p>
-
-      <form id="formulario" novalidate>
-        <fieldset class="estrellas" aria-label="Calificación">
-          <legend class="oculto">Calificación de 1 a 5 estrellas</legend>
-          <input type="radio" name="calificacion" id="e5" value="5"><label for="e5" title="5 estrellas">★</label>
-          <input type="radio" name="calificacion" id="e4" value="4"><label for="e4" title="4 estrellas">★</label>
-          <input type="radio" name="calificacion" id="e3" value="3"><label for="e3" title="3 estrellas">★</label>
-          <input type="radio" name="calificacion" id="e2" value="2"><label for="e2" title="2 estrellas">★</label>
-          <input type="radio" name="calificacion" id="e1" value="1"><label for="e1" title="1 estrella">★</label>
-        </fieldset>
-        <p id="etiqueta-estrellas" class="etiqueta-estrellas" aria-live="polite">&nbsp;</p>
-
-        <div id="detalles" hidden>
-          <div id="bloque-problemas" hidden>
-            <p class="pregunta">Lamentamos que no haya sido perfecta. ¿Qué falló?</p>
-            <div id="categorias" class="chips"></div>
-          </div>
-
-          <label class="campo">
-            <span id="texto-comentario">Tu comentario</span>
-            <textarea name="comentario" rows="4" maxlength="2000"></textarea>
-          </label>
-
-          <label class="campo">
-            <span>¿Quién te atendió? <em>(opcional)</em></span>
-            <input name="mesero" maxlength="100" autocomplete="off">
-          </label>
-
-          <label class="campo">
-            <span>Tu nombre <em>(opcional)</em></span>
-            <input name="nombre" maxlength="100" autocomplete="name">
-          </label>
-
-          <label class="campo" id="campo-contacto" hidden>
-            <span>Teléfono o WhatsApp para contactarte <em>(opcional)</em></span>
-            <input name="contacto" maxlength="100" inputmode="tel" autocomplete="tel">
-          </label>
-
-          <!-- Campo trampa contra bots: las personas no lo ven. -->
-          <label class="trampa" aria-hidden="true">Sitio web <input name="sitio" tabindex="-1" autocomplete="off"></label>
-
-          <p id="aviso-google" class="aviso" hidden>
-            Al enviar te llevaremos a Google para que compartas tu reseña.
-            Copiaremos tu comentario para que solo lo pegues.
-          </p>
-
-          <p id="error" class="error" role="alert" hidden></p>
-          <button type="submit" class="boton" id="enviar">Enviar</button>
-        </div>
-      </form>
+      <p class="texto-suave centrado">Toca las estrellas para calificarnos.</p>
+      <fieldset class="estrellas">
+        <legend class="oculto">Calificación de 1 a 5 estrellas</legend>
+        <input type="radio" name="calificacion" id="e5" value="5"><label for="e5" title="5 estrellas">★</label>
+        <input type="radio" name="calificacion" id="e4" value="4"><label for="e4" title="4 estrellas">★</label>
+        <input type="radio" name="calificacion" id="e3" value="3"><label for="e3" title="3 estrellas">★</label>
+        <input type="radio" name="calificacion" id="e2" value="2"><label for="e2" title="2 estrellas">★</label>
+        <input type="radio" name="calificacion" id="e1" value="1"><label for="e1" title="1 estrella">★</label>
+      </fieldset>
     </section>
 
-    <section id="paso-positivo" class="final" hidden>
+    <!-- 4 o 5 estrellas: directo a Google -->
+    <section id="paso-google" class="final" hidden>
       <p class="emoji" aria-hidden="true">🔥</p>
       <h2 class="titulo">¡Gracias por venir!</h2>
-      <p>¿Nos ayudas compartiendo tu opinión en Google? Le ayuda mucho a la parrilla.</p>
-      <p id="aviso-copiado" class="texto-suave" hidden>Ya copiamos tu comentario: en Google solo mantén presionado y elige <strong>Pegar</strong>.</p>
-      <a id="boton-google" class="boton boton-google" href="#" rel="noopener">Publicar en Google</a>
-      <p id="cuenta-regresiva" class="texto-suave" aria-live="polite"></p>
+      <p>Te llevamos a Google para que compartas tu experiencia. Le ayuda mucho a la parrilla.</p>
+      <a id="boton-google" class="boton boton-google" href="#" rel="noopener">Abrir Google</a>
     </section>
 
-    <section id="paso-negativo" class="final" hidden>
+    <!-- 1 a 3 estrellas: opciones para contar qué pasó -->
+    <section id="paso-queja" hidden>
+      <div class="queja-cabeza">
+        <span id="resumen-estrellas" class="resumen-estrellas"></span>
+        <button type="button" class="enlace" id="cambiar-estrellas">Cambiar</button>
+      </div>
+      <ol class="progreso" aria-label="Progreso">
+        <li data-paso="1"></li><li data-paso="2"></li><li data-paso="3"></li>
+      </ol>
+
+      <div class="subpaso" data-subpaso="1">
+        <h2 class="titulo">Lamentamos que no haya sido perfecta</h2>
+        <p class="texto-suave centrado">¿En qué fallamos? Puedes elegir varias.</p>
+        <div id="categorias" class="opciones-grandes"></div>
+      </div>
+
+      <div class="subpaso" data-subpaso="2" hidden>
+        <h2 class="titulo">¿Qué pasó exactamente?</h2>
+        <p class="texto-suave centrado">Toca lo que aplique.</p>
+        <div id="detalles"></div>
+        <label class="campo">
+          <span>¿Algo más que quieras contarnos? <em>(opcional)</em></span>
+          <textarea id="comentario" rows="3" maxlength="2000"></textarea>
+        </label>
+        <div class="campo">
+          <span class="etiqueta-campo">¿Quién te atendió? <em>(opcional)</em></span>
+          <div id="meseros" class="chips"></div>
+          <input id="mesero" maxlength="100" autocomplete="off" aria-label="Nombre de quien te atendió">
+        </div>
+      </div>
+
+      <div class="subpaso" data-subpaso="3" hidden>
+        <h2 class="titulo">¿Quieres que el gerente te contacte?</h2>
+        <p class="texto-suave centrado">Nos gustaría resolverlo contigo.</p>
+        <div class="opciones-grandes opciones-dos">
+          <button type="button" class="opcion" id="contacto-si" aria-pressed="false"><span aria-hidden="true">📞</span>Sí, contáctenme</button>
+          <button type="button" class="opcion" id="contacto-no" aria-pressed="false"><span aria-hidden="true">✉️</span>No, solo enviar</button>
+        </div>
+        <div id="datos-contacto" hidden>
+          <label class="campo">
+            <span>Teléfono o WhatsApp</span>
+            <input id="contacto" maxlength="100" inputmode="tel" autocomplete="tel">
+          </label>
+          <label class="campo">
+            <span>Tu nombre <em>(opcional)</em></span>
+            <input id="nombre" maxlength="100" autocomplete="name">
+          </label>
+        </div>
+      </div>
+
+      <!-- Campo trampa contra bots: las personas no lo ven. -->
+      <label class="trampa" aria-hidden="true">Sitio web <input id="sitio" tabindex="-1" autocomplete="off"></label>
+
+      <p id="error" class="error" role="alert" hidden></p>
+      <div class="navegacion">
+        <button type="button" class="boton-sec" id="atras">Atrás</button>
+        <button type="button" class="boton" id="siguiente">Siguiente</button>
+      </div>
+    </section>
+
+    <section id="paso-gracias" class="final" hidden>
       <h2 class="titulo">Gracias por decírnoslo</h2>
       <p>Tu comentario ya le llegó al gerente. Queremos que tu próxima visita sea mucho mejor.</p>
       <p id="aviso-contacto" class="texto-suave" hidden>Te contactaremos pronto.</p>

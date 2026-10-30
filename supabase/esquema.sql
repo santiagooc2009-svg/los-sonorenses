@@ -8,12 +8,17 @@ create table if not exists public.resenas (
   calificacion smallint not null check (calificacion between 1 and 5),
   comentario   text check (char_length(comentario) <= 2000),
   categorias   text[] not null default '{}' check (cardinality(categorias) <= 20),
+  detalles     text[] not null default '{}' check (cardinality(detalles) <= 60),
   mesero       text check (char_length(mesero) <= 100),
   nombre       text check (char_length(nombre) <= 100),
   contacto     text check (char_length(contacto) <= 100),
   atendida     boolean not null default false,
   nota_interna text check (char_length(nota_interna) <= 1000)
 );
+
+-- Para quien ya había creado la tabla con la versión anterior.
+alter table public.resenas
+  add column if not exists detalles text[] not null default '{}' check (cardinality(detalles) <= 60);
 
 create index if not exists resenas_creada_en_idx on public.resenas (creada_en desc);
 
@@ -58,7 +63,7 @@ create policy "staff actualiza resenas" on public.resenas
 
 -- Los clientes no pueden cambiar la fecha ni marcar su reseña como atendida.
 revoke insert on public.resenas from anon, authenticated;
-grant insert (calificacion, comentario, categorias, mesero, nombre, contacto)
+grant insert (calificacion, comentario, categorias, detalles, mesero, nombre, contacto)
   on public.resenas to anon, authenticated;
 -- El personal solo cambia el estado y la nota, nunca lo que escribió el cliente.
 revoke update on public.resenas from anon, authenticated;

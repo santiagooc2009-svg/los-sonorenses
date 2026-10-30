@@ -29,7 +29,7 @@
   function coincideBusqueda(r) {
     const q = $("#buscar").value.trim().toLowerCase();
     if (!q) return true;
-    return [r.comentario, r.mesero, r.nombre, r.contacto, r.nota_interna, (r.categorias || []).join(" ")]
+    return [r.comentario, r.mesero, r.nombre, r.contacto, r.nota_interna, (r.categorias || []).join(" "), (r.detalles || []).join(" ")]
       .some((v) => v && v.toLowerCase().includes(q));
   }
 
@@ -78,9 +78,15 @@
         queja && el("span", { className: "etiqueta " + (r.atendida ? "etiqueta-ok" : "etiqueta-alerta"), textContent: r.atendida ? "Atendida" : "Pendiente" })
       ),
       (r.categorias || []).length > 0 && el("div", { className: "chips chips-chicos" },
-        r.categorias.map((c) => el("span", { className: "chip chip-fijo", textContent: c }))
+        r.categorias.map((c) => el("span", { className: "chip chip-fijo chip-categoria", textContent: c }))
       ),
-      el("p", { className: "resena-texto" + (r.comentario ? "" : " texto-suave"), textContent: r.comentario || "Sin comentario" }),
+      (r.detalles || []).length > 0 && el("ul", { className: "resena-detalles" },
+        r.detalles.map((d) => el("li", { textContent: d }))
+      ),
+      (r.comentario || !(r.detalles || []).length) && el("p", {
+        className: "resena-texto" + (r.comentario ? "" : " texto-suave"),
+        textContent: r.comentario || (queja ? "Sin comentario" : "Lo mandamos a Google para publicar su reseña"),
+      }),
       el("dl", { className: "resena-datos" },
         r.mesero && [el("dt", { textContent: "Atendió" }), el("dd", { textContent: r.mesero })],
         r.nombre && [el("dt", { textContent: "Cliente" }), el("dd", { textContent: r.nombre })],
@@ -111,8 +117,15 @@
     $("#t-pendientes").textContent = resenas.filter((r) => esQueja(r) && !r.atendida).length;
 
     const conteo = {};
-    delPeriodo.filter(esQueja).forEach((r) =>
-      (r.categorias || []).forEach((c) => (conteo[c] = (conteo[c] || 0) + 1))
+    const conteoDetalles = {};
+    delPeriodo.filter(esQueja).forEach((r) => {
+      (r.categorias || []).forEach((c) => (conteo[c] = (conteo[c] || 0) + 1));
+      (r.detalles || []).forEach((d) => (conteoDetalles[d] = (conteoDetalles[d] || 0) + 1));
+    });
+    const topDetalles = Object.entries(conteoDetalles).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    $("#bloque-top-detalles").hidden = topDetalles.length === 0;
+    $("#top-detalles").replaceChildren(
+      ...topDetalles.map(([d, n]) => el("li", {}, d, " ", el("span", { className: "texto-suave", textContent: "(" + n + ")" })))
     );
     const orden = Object.entries(conteo).sort((a, b) => b[1] - a[1]);
     $("#resumen-problemas").hidden = orden.length === 0;
@@ -152,7 +165,7 @@
   }
 
   function exportarCsv() {
-    const columnas = ["creada_en", "calificacion", "comentario", "categorias", "mesero", "nombre", "contacto", "atendida", "nota_interna"];
+    const columnas = ["creada_en", "calificacion", "categorias", "detalles", "comentario", "mesero", "nombre", "contacto", "atendida", "nota_interna"];
     const celda = (v) => {
       let t = Array.isArray(v) ? v.join(", ") : v == null ? "" : String(v);
       if (/^[=+\-@]/.test(t)) t = "'" + t; // evita fórmulas al abrir en Excel
